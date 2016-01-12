@@ -12,6 +12,4 @@ public class RabbitCOnfig {
     public static final String exchange = "";
     public static final String rotuingkey = "";
 
-
-
 }
