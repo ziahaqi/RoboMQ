@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity implements MQConsumer.MQCons
 
     private MQFactory mqFactory;
     private MQConsumer mqConsumer;
-    private MQProducer mqProducer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
