@@ -11,8 +11,8 @@ rabbitMQ client library for android
                 RabbitCOnfig.rotuingkey,
                 RabbitCOnfig.port);
                 
-- create consumer __
+- create consumer<br/>
 this.mqConsumer = mqFactory.createConsumer(this);
 
-- subscribe message from server __
+- subscribe message from server<br/>
  this.mqConsumer.subsribe();
