@@ -1,7 +1,7 @@
 # RoboMQ
 rabbitMQ client library for android
 
-initiation 
+initiation \n
 - create robomq factory
         this.mqFactory = new MQFactory(RabbitCOnfig.hostName,
                 RabbitCOnfig.virtualHostname,
@@ -11,8 +11,8 @@ initiation
                 RabbitCOnfig.rotuingkey,
                 RabbitCOnfig.port);
                 
-- create consumer 
+- create consumer \n
 this.mqConsumer = mqFactory.createConsumer(this);
 
-- subscribe message from server
+- subscribe message from server \n
  this.mqConsumer.subsribe();
