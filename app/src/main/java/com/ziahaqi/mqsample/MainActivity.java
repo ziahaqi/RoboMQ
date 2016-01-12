@@ -23,13 +23,13 @@ public class MainActivity extends AppCompatActivity implements MQConsumer.MQCons
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.mqFactory = new MQFactory(RabbitCOnfig.hostName,
-                RabbitCOnfig.virtualHostname,
-                RabbitCOnfig.username,
-                RabbitCOnfig.password,
-                RabbitCOnfig.exchange,
-                RabbitCOnfig.rotuingkey,
-                RabbitCOnfig.port);
+        this.mqFactory = new MQFactory(MQConfig.hostName,
+                MQConfig.virtualHostname,
+                MQConfig.username,
+                MQConfig.password,
+                MQConfig.exchange,
+                MQConfig.rotuingkey,
+                MQConfig.port);
         this.mqConsumer = mqFactory.createConsumer(this);
         this.mqConsumer.subsribe();
     }
