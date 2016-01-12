@@ -1,7 +1,7 @@
 # RoboMQ
 rabbitMQ client library for android
 
-+ how to use : __
++ how to use :__
 - create robomq factory __
         this.mqFactory = new MQFactory(RabbitCOnfig.hostName,
                 RabbitCOnfig.virtualHostname,
