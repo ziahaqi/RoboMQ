@@ -8,7 +8,7 @@ public class RabbitCOnfig {
     public static final String virtualHostname = "";
     public static final String username = "";
     public static final String password = "";
-    public static final int port = 111;
+    public static final int port = 101;
     public static final String exchange = "";
     public static final String rotuingkey = "";
 }
