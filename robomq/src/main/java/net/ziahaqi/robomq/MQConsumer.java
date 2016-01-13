@@ -28,7 +28,6 @@ public class MQConsumer extends MQConnector{
 
     private Handler mCallbackHandler = new Handler();
     private boolean queuing = true;
-    private boolean subscribeRunning = true;
     public interface MQConsumerCallback {
 
         void onMQConnectionFailure(String message);
@@ -53,7 +52,7 @@ public class MQConsumer extends MQConnector{
                 );
     }
 
-    public MQConsumer(String host, String virtualHost, String username, String password, int port, String routingKey, String excahnge, MQConsumerCallback callback) {
+    private MQConsumer(String host, String virtualHost, String username, String password, int port, String routingKey, String excahnge, MQConsumerCallback callback) {
         super(host, virtualHost, username, password, port);
         this.mRoutingKey = routingKey;
         this.mExchange = excahnge;
@@ -62,7 +61,7 @@ public class MQConsumer extends MQConnector{
     }
 
     public String createDefaultQueueName(){
-        return   "123@" + UUID.randomUUID();
+        return    mRoutingKey +"@" + UUID.randomUUID();
     }
 
 
@@ -86,7 +85,7 @@ public class MQConsumer extends MQConnector{
             public void run() {
                 Log.d(TAG, "subscribe>run");
 
-                while(subscribeRunning) {
+                while(isRunning) {
                     try {
                         Log.d(TAG, "subscribe>run>subscribeRunning");
 
@@ -113,11 +112,10 @@ public class MQConsumer extends MQConnector{
                             | ShutdownSignalException | IOException | TimeoutException e) {
                         sendBackErrorMessage(e);
                         try {
-                            Thread.sleep(4000);
+                            Thread.sleep(5000);
                         } catch (InterruptedException e1) {
                             e1.printStackTrace();
                         }
-
                     }
                 }
             }
@@ -143,20 +141,13 @@ public class MQConsumer extends MQConnector{
         }
     }
 
+
     private void initchanenel(){
         if(!isChannelAvailable()){
             createChannel();
         }
     }
-    @Override
-    protected void createChannel() {
 
-        try {
-            mChannel = this.mConnection.createChannel();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void declareQueue() throws IOException {
         Map<String, Object> params = new HashMap<String, Object>();

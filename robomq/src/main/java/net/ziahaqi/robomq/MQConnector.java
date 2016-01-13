@@ -19,7 +19,8 @@ public abstract class MQConnector {
     protected Connection mConnection;
     protected Handler mStateHandler;
 
-    private boolean running;
+    protected boolean isRunning = true;
+
     protected String host;
     protected String virtualHost;
     protected String username;
@@ -36,14 +37,9 @@ public abstract class MQConnector {
         this.port = port;
     }
 
-    protected boolean isRunning() {
-        return running;
-    }
-
-    protected abstract void createChannel();
 
     public void closeMQConnection() throws IOException, TimeoutException {
-        running = false;
+         isRunning = false;
         if (mConnection != null) {
             mConnection.close();
         }
@@ -53,7 +49,7 @@ public abstract class MQConnector {
         }
     }
 
-    protected void createConnection() throws IOException, TimeoutException {
+    protected void  createConnection() throws IOException, TimeoutException {
             ConnectionFactory connectionFactory = new ConnectionFactory();
             connectionFactory.setUsername(username);
             connectionFactory.setPassword(password);
@@ -66,6 +62,14 @@ public abstract class MQConnector {
             mConnection.addShutdownListener(createShutDownListener());
     }
 
+    protected void createChannel() {
+
+        try {
+            mChannel = this.mConnection.createChannel();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     protected abstract ShutdownListener createShutDownListener();
 
     protected void setConnectionTimeOut(int requestTimeOut){

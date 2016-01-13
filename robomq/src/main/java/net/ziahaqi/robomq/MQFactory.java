@@ -6,13 +6,13 @@ package net.ziahaqi.robomq;
 public class MQFactory {
     private static final String TAG = "MQFactory";
 
-    public String excahnge;
-    public String routingKey;
-    String hostName;
-    String virtualHostName;
-    String username;
-    String password;
-    int port;
+    private String excahnge;
+    private String routingKey;
+    private String hostName;
+    private String virtualHostName;
+    private String username;
+    private String password;
+    private int port;
 
     public MQFactory(String hostName, String virtualHostName, String username, String password, String excahnge, String routingKey, int port) {
         this.excahnge = excahnge;
@@ -29,6 +29,11 @@ public class MQFactory {
     public MQConsumer createConsumer(MQConsumer.MQConsumerCallback callback){
         MQConsumer consumer = MQConsumer.createInstance(this, callback);
         return consumer;
+    }
+
+    public MQProducer createProducer(MQProducer.MQProducerCallback callback){
+        MQProducer producer = MQProducer.createInstance(this, callback);
+        return producer;
     }
 
     public String getExcahnge() {
