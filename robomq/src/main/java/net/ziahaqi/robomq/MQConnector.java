@@ -40,10 +40,10 @@ public abstract class MQConnector {
 
     public void closeMQConnection() throws IOException, TimeoutException {
          isRunning = false;
-        if (mConnection != null) {
+        if(isConnected()){
             mConnection.close();
         }
-        if (mChannel != null) {
+        if(isChannelAvailable()){
             mChannel.close();
             mChannel.abort();
         }

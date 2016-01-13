@@ -4,23 +4,33 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.QueueingConsumer;
 
 import net.ziahaqi.robomq.MQConsumer;
 import net.ziahaqi.robomq.MQFactory;
 import net.ziahaqi.robomq.MQProducer;
 
-public class MainActivity extends AppCompatActivity implements MQConsumer.MQConsumerCallback{
+public class MainActivity extends AppCompatActivity implements MQConsumer.MQConsumerCallback,
+        MQProducer.MQProducerCallback{
 
     private MQFactory mqFactory;
     private MQConsumer mqConsumer;
+
+    private boolean consumerModeStart = true;
+    private MQProducer mqProducer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         this.mqFactory = new MQFactory(MQConfig.hostName,
                 MQConfig.virtualHostname,
                 MQConfig.username,
@@ -28,8 +38,38 @@ public class MainActivity extends AppCompatActivity implements MQConsumer.MQCons
                 MQConfig.exchange,
                 MQConfig.rotuingkey,
                 MQConfig.port);
-        this.mqConsumer = mqFactory.createConsumer(this);
-        this.mqConsumer.subsribe();
+
+        this.mqConsumer = this.mqFactory.createConsumer(this);
+        this.mqProducer = this.mqFactory.createProducer(this);
+
+        findViewById(R.id.btn_consumer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(consumerModeStart){
+                    mqConsumer.subsribe();
+                    consumerModeStart = false;
+                    ((Button)findViewById(R.id.btn_consumer)).setText("stop consumer");
+                    Toast.makeText(MainActivity.this, "start consumer", Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    consumerModeStart = true;
+                    mqConsumer.stop();
+                    ((Button)findViewById(R.id.btn_consumer)).setText("start consumer");
+                    Toast.makeText(MainActivity.this, "stop consumer", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+        findViewById(R.id.btn_producer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String message = ((EditText)findViewById(R.id.edit_producer)).getText().toString();
+                mqProducer.publish(message, null);
+                Toast.makeText(MainActivity.this, "publish", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

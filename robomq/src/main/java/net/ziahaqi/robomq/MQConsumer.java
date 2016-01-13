@@ -77,6 +77,14 @@ public class MQConsumer extends MQConnector{
         return listener;
     }
 
+    public void stop(){
+        try {
+            closeMQConnection();
+        } catch (IOException | TimeoutException e) {
+            sendBackErrorMessage(e);
+            e.printStackTrace();
+        }
+    }
 
     public void subsribe(){
         Log.d(TAG, "subscribe");
