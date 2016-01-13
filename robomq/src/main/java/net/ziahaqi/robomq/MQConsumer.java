@@ -41,6 +41,18 @@ public class MQConsumer extends MQConnector{
 
     }
 
+    public static MQConsumer createInstance(MQFactory factory, MQConsumerCallback callback){
+        return new MQConsumer(factory.getHostName(),
+                factory.getVirtualHostName(),
+                factory.getUsername(),
+                factory.getPassword(),
+                factory.getPort(),
+                factory.getRoutingKey(),
+                factory.getExcahnge(),
+                callback
+                );
+    }
+
     public MQConsumer(String host, String virtualHost, String username, String password, int port, String routingKey, String excahnge, MQConsumerCallback callback) {
         super(host, virtualHost, username, password, port);
         this.mRoutingKey = routingKey;

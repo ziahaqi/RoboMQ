@@ -27,9 +27,7 @@ public class MQFactory {
 
 
     public MQConsumer createConsumer(MQConsumer.MQConsumerCallback callback){
-        MQConsumer consumer = new MQConsumer(this.hostName, this.virtualHostName, this.username, password, this.port,
-                this.routingKey, this.excahnge,
-                callback);
+        MQConsumer consumer = MQConsumer.createInstance(this, callback);
         return consumer;
     }
 

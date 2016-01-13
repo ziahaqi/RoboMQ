@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements MQConsumer.MQCons
                 MQConfig.port);
         this.mqConsumer = mqFactory.createConsumer(this);
         this.mqConsumer.subsribe();
+
+
     }
 
     @Override

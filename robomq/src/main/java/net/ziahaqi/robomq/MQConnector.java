@@ -48,14 +48,12 @@ public abstract class MQConnector {
             mConnection.close();
         }
         if (mChannel != null) {
-
             mChannel.close();
             mChannel.abort();
         }
     }
 
     protected void createConnection() throws IOException, TimeoutException {
-        if (!isConnected()) {
             ConnectionFactory connectionFactory = new ConnectionFactory();
             connectionFactory.setUsername(username);
             connectionFactory.setPassword(password);
@@ -66,7 +64,6 @@ public abstract class MQConnector {
             connectionFactory.setRequestedHeartbeat(this.requestHeartBeat);
             mConnection = connectionFactory.newConnection();
             mConnection.addShutdownListener(createShutDownListener());
-        }
     }
 
     protected abstract ShutdownListener createShutDownListener();
