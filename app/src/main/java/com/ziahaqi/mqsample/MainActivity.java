@@ -12,12 +12,12 @@ import android.widget.Toast;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.QueueingConsumer;
 
+import net.ziahaqi.robomq.MQCallback;
 import net.ziahaqi.robomq.MQConsumer;
 import net.ziahaqi.robomq.MQFactory;
 import net.ziahaqi.robomq.MQProducer;
 
-public class MainActivity extends AppCompatActivity implements MQConsumer.MQConsumerCallback,
-        MQProducer.MQProducerCallback{
+public class MainActivity extends AppCompatActivity implements MQCallback{
 
     private MQFactory mqFactory;
     private MQConsumer mqConsumer;
@@ -42,11 +42,19 @@ public class MainActivity extends AppCompatActivity implements MQConsumer.MQCons
         this.mqConsumer = this.mqFactory.createConsumer(this);
         this.mqProducer = this.mqFactory.createProducer(this);
 
+        this.mqConsumer.setMessageListner(new MQConsumer.MQConsumerListener() {
+            @Override
+            public void onMessageReceived(QueueingConsumer.Delivery delivery) {
+                Toast.makeText(MainActivity.this, "receive message", Toast.LENGTH_SHORT).show();
+            }
+        });
         findViewById(R.id.btn_consumer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(consumerModeStart){
                     mqConsumer.subsribe();
+
+
                     consumerModeStart = false;
                     ((Button)findViewById(R.id.btn_consumer)).setText("stop consumer");
                     Toast.makeText(MainActivity.this, "start consumer", Toast.LENGTH_SHORT).show();
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements MQConsumer.MQCons
         findViewById(R.id.btn_producer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message = ((EditText)findViewById(R.id.edit_producer)).getText().toString();
+                String message = ((EditText) findViewById(R.id.edit_producer)).getText().toString();
                 mqProducer.publish(message, null);
                 Toast.makeText(MainActivity.this, "publish", Toast.LENGTH_SHORT).show();
             }
@@ -109,8 +117,4 @@ public class MainActivity extends AppCompatActivity implements MQConsumer.MQCons
 
     }
 
-    @Override
-    public void onMQMessegeReceived(QueueingConsumer.Delivery delivery) {
-        Toast.makeText(this, "delivery", Toast.LENGTH_SHORT).show();
-    }
 }

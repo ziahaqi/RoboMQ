@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class MQConsumer extends MQConnector{
     private static final String TAG = "MQConsumer";
-    private MQConsumerCallback mCallback;
+    private MQCallback mCallback;
     private Thread subscribeThread;
     private QueueingConsumer mQueue;
     private String mQueueName;
@@ -27,20 +27,13 @@ public class MQConsumer extends MQConnector{
     private String mRoutingKey;
 
     private Handler mCallbackHandler = new Handler();
+    private MQConsumerListener mqConsumerListener;
     private boolean queuing = true;
-    public interface MQConsumerCallback {
-
-        void onMQConnectionFailure(String message);
-
-        void onMQDisconnected();
-
-        void onMQConnectionClosed(String message);
-
-        void onMQMessegeReceived(QueueingConsumer.Delivery delivery);
-
+    public interface MQConsumerListener{
+        public void onMessageReceived(QueueingConsumer.Delivery delivery);
     }
 
-    public static MQConsumer createInstance(MQFactory factory, MQConsumerCallback callback){
+    public static MQConsumer createInstance(MQFactory factory, MQCallback callback){
         return new MQConsumer(factory.getHostName(),
                 factory.getVirtualHostName(),
                 factory.getUsername(),
@@ -52,13 +45,17 @@ public class MQConsumer extends MQConnector{
                 );
     }
 
-    private MQConsumer(String host, String virtualHost, String username, String password, int port, String routingKey, String excahnge, MQConsumerCallback callback) {
+    private MQConsumer(String host, String virtualHost, String username, String password, int port, String routingKey, String excahnge, MQCallback callback) {
         super(host, virtualHost, username, password, port);
         this.mRoutingKey = routingKey;
         this.mExchange = excahnge;
         this.mCallback = callback;
         this.mQueueName = createDefaultQueueName();
     }
+
+    public void setMessageListner(MQConsumerListener listner){
+        mqConsumerListener = listner;
+    };
 
     public String createDefaultQueueName(){
         return    mRoutingKey +"@" + UUID.randomUUID();
@@ -112,7 +109,7 @@ public class MQConsumer extends MQConnector{
                                 mCallbackHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mCallback.onMQMessegeReceived(delivery);
+                                    mqConsumerListener.onMessageReceived(delivery);
                                 }
                             });
                         }

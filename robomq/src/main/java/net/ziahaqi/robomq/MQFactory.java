@@ -26,12 +26,12 @@ public class MQFactory {
 
 
 
-    public MQConsumer createConsumer(MQConsumer.MQConsumerCallback callback){
+    public MQConsumer createConsumer(MQCallback callback){
         MQConsumer consumer = MQConsumer.createInstance(this, callback);
         return consumer;
     }
 
-    public MQProducer createProducer(MQProducer.MQProducerCallback callback){
+    public MQProducer createProducer(MQCallback callback){
         MQProducer producer = MQProducer.createInstance(this, callback);
         return producer;
     }

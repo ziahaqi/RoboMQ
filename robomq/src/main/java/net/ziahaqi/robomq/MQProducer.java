@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class MQProducer extends MQConnector{
     private static final String TAG = "MQProducer";
-    private MQProducerCallback mCallback;
+    private MQCallback mCallback;
     private String mQueueName;
     private String mExchange;
     private String mRoutingKey;
@@ -27,14 +27,8 @@ public class MQProducer extends MQConnector{
     int publishTimeout = 5 * 1000;
     private Handler mCallbackHandler = new Handler();
 
-    public interface MQProducerCallback {
 
-        void onMQConnectionClosed(String errorMessage);
-
-        void onMQConnectionFailure(String errorMessage);
-    }
-
-    public static MQProducer createInstance(MQFactory factory, MQProducerCallback callback ){
+    public static MQProducer createInstance(MQFactory factory, MQCallback callback ){
         return new MQProducer(factory.getHostName(),
                 factory.getVirtualHostName(),
                 factory.getUsername(),
@@ -44,7 +38,7 @@ public class MQProducer extends MQConnector{
                 factory.getExcahnge(),
                 callback);
     }
-    private  MQProducer(String host, String virtualHost, String username, String password, int port, String routingKey, String exchange, MQProducerCallback callback) {
+    private  MQProducer(String host, String virtualHost, String username, String password, int port, String routingKey, String exchange, MQCallback callback) {
         super(host, virtualHost, username, password, port);
         this.mCallback = callback;
         this.mRoutingKey = routingKey;
