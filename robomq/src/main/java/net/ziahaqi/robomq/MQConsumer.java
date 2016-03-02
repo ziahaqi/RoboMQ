@@ -28,7 +28,6 @@ public class MQConsumer extends MQConnector{
 
     private Handler mCallbackHandler = new Handler();
     private MQConsumerListener mqConsumerListener;
-    private boolean queuing = true;
     public interface MQConsumerListener{
         public void onMessageReceived(QueueingConsumer.Delivery delivery);
     }
@@ -83,16 +82,13 @@ public class MQConsumer extends MQConnector{
         }
     }
 
-    public void subsribe(){
+    public void subscribe(){
         Log.d(TAG, "subscribe");
         subscribeThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "subscribe>run");
-
-                while(isRunning) {
+                while(running) {
                     try {
-                        Log.d(TAG, "subscribe>run>subscribeRunning");
 
                         initConnection();
                         initchanenel();
@@ -100,9 +96,7 @@ public class MQConsumer extends MQConnector{
                         mChannel.queueBind(mQueueName, mExchange, mRoutingKey);
                         mQueue = new QueueingConsumer(mChannel);
                         mChannel.basicConsume(mQueueName, mQueue);
-                        while(queuing){
-                            Log.d(TAG, "subscribe>run>subscribeRunning>queuing");
-
+                        while(isListening){
                             final QueueingConsumer.Delivery delivery;
                                 delivery = mQueue.nextDelivery();
                                 mChannel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);

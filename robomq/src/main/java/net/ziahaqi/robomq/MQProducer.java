@@ -1,6 +1,5 @@
 package net.ziahaqi.robomq;
 
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
@@ -67,7 +66,7 @@ public class MQProducer extends MQConnector{
         publishThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(isRunning) {
+                while(running) {
                     try {
                         initConnection();
                         initchanenel();
@@ -78,13 +77,13 @@ public class MQProducer extends MQConnector{
                         mChannel.basicPublish(mExchange, mRoutingKey, properties, messageBytes);
                         mChannel.waitForConfirms(publishTimeout);
                         closeMQConnection();
-                        isRunning = false;
+                        running = false;
                     } catch (InterruptedException | IOException | TimeoutException e) {
                         sendBackErrorMessage(e);
                         try {
                             Thread.sleep(5000); //sleep and then try again
                         } catch (InterruptedException e1) {
-                            isRunning = false;
+                            running = false;
                             break;
                         }
                     }

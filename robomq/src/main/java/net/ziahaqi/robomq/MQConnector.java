@@ -8,7 +8,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.ShutdownListener;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -17,9 +16,9 @@ import java.util.concurrent.TimeoutException;
 public abstract class MQConnector {
     protected Channel mChannel = null;
     protected Connection mConnection;
-    protected Handler mStateHandler;
 
-    protected boolean isRunning = true;
+    protected boolean running = true;
+    protected boolean isListening = true;
 
     protected String host;
     protected String virtualHost;
@@ -39,7 +38,8 @@ public abstract class MQConnector {
 
 
     public void closeMQConnection() throws IOException, TimeoutException {
-         isRunning = false;
+         running = false;
+         isListening = false;
         if(isConnected()){
             mConnection.close();
         }

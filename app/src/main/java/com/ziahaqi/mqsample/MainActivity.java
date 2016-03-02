@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.QueueingConsumer;
 
 import net.ziahaqi.robomq.MQCallback;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements MQCallback{
             @Override
             public void onClick(View view) {
                 if(consumerModeStart){
-                    mqConsumer.subsribe();
+                    mqConsumer.subscribe();
 
 
                     consumerModeStart = false;
